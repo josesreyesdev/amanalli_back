@@ -21,16 +21,16 @@ public class VentaPedidos {
     private Double totalVenta;
     @Column (name = "estatus_pedido", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean estatusPedido;
-    /*
+
     // Cardinalidad Productos -> DetallePedido 1:N
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ventaPedidos")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "venta_pedidos")
     private List<DetallePedido> detallePedidos = new ArrayList<>();
 
     // Cardinalidad de VentaPedidos -> Usuarios N:1
     @ManyToOne
-    @JoinColumn(name = "id_pedidos_usuario")//Especifica una columna para hacer JOIN de SQL
+    @JoinColumn(name = "id_usuario")//Especifica una columna para hacer JOIN de SQL
     private Usuarios usuarios;
-    */
+
     //Constructores
     public VentaPedidos(Long idVenta, LocalDateTime fechaPedido, Double totalVenta, Boolean estatusPedido) {
         this.idVenta = idVenta;
