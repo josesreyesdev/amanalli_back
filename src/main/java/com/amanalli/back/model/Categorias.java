@@ -20,11 +20,11 @@ public class Categorias {
     private String descripcionCategoria;
     @Column (name = "estatus_categoria", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean estatusCategoria;
-    /*
+
     // Cardinalidad Categorias -> Productos 1:N
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categorias")
+    @OneToMany(mappedBy = "categorias", cascade = CascadeType.ALL)
     private List<Productos> productos = new ArrayList<>();
-    */
+
     //Constructores
     public Categorias(Long idCategoria, String nombreCategoria, String descripcionCategoria, Boolean estatusCategoria) {
         this.idCategoria = idCategoria;

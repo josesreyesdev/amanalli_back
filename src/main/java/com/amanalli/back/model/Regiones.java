@@ -19,11 +19,11 @@ public class Regiones {
     private String nombreRegion;
     @Column (name = "estatus_region", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean estatusRegion;
-    /*
+
     // Cardinalidad Regiones -> Productos 1:N
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "regiones")
-    private List<Regiones> regiones = new ArrayList<>();
-    */
+    @OneToMany(mappedBy = "regiones", cascade = CascadeType.ALL)
+    private List<Productos> productos = new ArrayList<>();
+
     //Constructores
     public Regiones(Long idRegion, String nombreRegion, Boolean estatusRegion) {
         this.idRegion = idRegion;

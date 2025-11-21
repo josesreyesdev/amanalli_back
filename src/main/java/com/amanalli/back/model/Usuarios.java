@@ -24,11 +24,11 @@ public class Usuarios {
     private String telefono;
     @Column (name = "activo", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean activo;
-    /*
+
     // Cardinalidad Usuarios -> VentaPedido 1:N
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarios")
     private List<VentaPedidos> ventaPedidos = new ArrayList<>();
-    */
+
     //Constructores
     public Usuarios(Long idUsuario, String nombreCompleto, String email, String password, Boolean activo) {
         this.idUsuario = idUsuario;

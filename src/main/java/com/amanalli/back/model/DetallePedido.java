@@ -16,17 +16,17 @@ public class DetallePedido {
     private Long cantidad;
     @Column(name = "importe", nullable = false, columnDefinition = "DECIMAL(8,2)")
     private Double importe;
-    /*
+
     // Cardinalidad de DetallePedido -> Productos N:1
     @ManyToOne
-    @JoinColumn(name = "id_detalle_producto")//Especifica una columna para hacer JOIN de SQL
+    @JoinColumn(name = "id_producto")//Especifica una columna para hacer JOIN de SQL
     private Productos productos;
 
     // Cardinalidad de DetallePedido -> VentaPedidos N:1
     @ManyToOne
     @JoinColumn(name = "id_detalle_venta")//Especifica una columna para hacer JOIN de SQL
-    private VentaPedidos ventaPedidos;
-    */
+    private VentaPedidos venta_pedidos;
+
     //Constructores
     public DetallePedido(Long idDetalle, Long cantidad, Double importe) {
         this.idDetalle = idDetalle;

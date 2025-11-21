@@ -27,21 +27,21 @@ public class Productos {
     @Column (name = "estatus_producto", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean estatusProducto;
 
-    /*
+
     // Cardinalidad de Productos -> Categorias N:1
     @ManyToOne
-    @JoinColumn(name = "id_categoria_producto")//Especifica una columna para hacer JOIN de SQL
+    @JoinColumn(name = "id_categoria")//Especifica una columna para hacer JOIN de SQL
     private Categorias categorias;
 
     // Cardinalidad de Productos -> Regiones N:1
     @ManyToOne
-    @JoinColumn(name = "id_region_producto")//Especifica una columna para hacer JOIN de SQL
+    @JoinColumn(name = "id_region")//Especifica una columna para hacer JOIN de SQL
     private Regiones regiones;
 
     // Cardinalidad Productos -> DetallePedido 1:N
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "productos")
     private List<DetallePedido> detallePedidos = new ArrayList<>();
-    */
+
     //Contructores
     public Productos(Long idProducto, String nombreProducto, String descripcionProducto, Double precio, String imagen, Long stock, Boolean estatusProducto) {
         this.idProducto = idProducto;
