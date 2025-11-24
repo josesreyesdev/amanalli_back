@@ -19,18 +19,18 @@ public class Categorias {
     @Column (name = "descripcion_categoria", nullable = false, columnDefinition = "TEXT")
     private String descripcionCategoria;
     @Column (name = "estatus_categoria", nullable = false, columnDefinition = "TINYINT(1)")
-    private Boolean estatusCategoria;
+    private Boolean estatusCategoria = true;
 
     // Cardinalidad Categorias -> Productos 1:N
     @OneToMany(mappedBy = "categorias", cascade = CascadeType.ALL)
     private List<Productos> productos = new ArrayList<>();
 
     //Constructores
-    public Categorias(Long idCategoria, String nombreCategoria, String descripcionCategoria, Boolean estatusCategoria) {
+    public Categorias(Long idCategoria, String nombreCategoria, String descripcionCategoria) {
         this.idCategoria = idCategoria;
         this.nombreCategoria = nombreCategoria;
         this.descripcionCategoria = descripcionCategoria;
-        this.estatusCategoria = estatusCategoria;
+        this.estatusCategoria = true;
     }
 
     public Categorias(){
@@ -91,5 +91,9 @@ public class Categorias {
     @Override
     public int hashCode() {
         return Objects.hash(idCategoria, nombreCategoria, descripcionCategoria, estatusCategoria);
+    }
+
+    public void desactivarById() {
+        this.estatusCategoria = false;
     }
 }

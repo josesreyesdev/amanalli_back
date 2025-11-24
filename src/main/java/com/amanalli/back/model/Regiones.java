@@ -18,7 +18,7 @@ public class Regiones {
     @Column(name = "nombre_region", nullable = false, unique = true, length = 50, columnDefinition = "VARCHAR(50)")
     private String nombreRegion;
     @Column (name = "estatus_region", nullable = false, columnDefinition = "TINYINT(1)")
-    private Boolean estatusRegion;
+    private Boolean estatusRegion = true;
 
     // Cardinalidad Regiones -> Productos 1:N
     @OneToMany(mappedBy = "regiones", cascade = CascadeType.ALL)
@@ -80,5 +80,9 @@ public class Regiones {
     @Override
     public int hashCode() {
         return Objects.hash(idRegion, nombreRegion, estatusRegion);
+    }
+
+    public void desactivarById() {
+        this.estatusRegion = false;
     }
 }
