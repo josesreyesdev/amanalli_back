@@ -20,7 +20,7 @@ public class Productos {
     private String descripcionProducto;
     @Column(name = "precio", nullable = false, columnDefinition = "DECIMAL(8,2)")
     private Double precio;
-    @Column(name = "imagen", nullable = false, unique = true, length = 300, columnDefinition = "VARCHAR(300)")
+    @Column(name = "imagen", nullable = false, length = 300, columnDefinition = "VARCHAR(300)")
     private String imagen;
     @Column(name = "stock", nullable = false, columnDefinition = "INT")
     private Long stock;
@@ -43,7 +43,7 @@ public class Productos {
     private List<DetallePedido> detallePedidos = new ArrayList<>();
 
     //Contructores
-    public Productos(Long idProducto, String nombreProducto, String descripcionProducto, Double precio, String imagen, Long stock, Boolean estatusProducto) {
+    public Productos(Long idProducto, String nombreProducto, String descripcionProducto, Double precio, String imagen, Long stock, Boolean estatusProducto, Categorias categorias, Regiones regiones) {
         this.idProducto = idProducto;
         this.nombreProducto = nombreProducto;
         this.descripcionProducto = descripcionProducto;
@@ -51,6 +51,8 @@ public class Productos {
         this.imagen = imagen;
         this.stock = stock;
         this.estatusProducto = estatusProducto;
+        this.categorias = categorias;
+        this.regiones = regiones;
     }
 
     public Productos(){
@@ -112,6 +114,30 @@ public class Productos {
 
     public void setEstatusProducto(Boolean estatusProducto) {
         this.estatusProducto = estatusProducto;
+    }
+
+    public Categorias getCategorias() {
+        return categorias;
+    }
+
+    public void setCategorias(Categorias categorias) {
+        this.categorias = categorias;
+    }
+
+    public Regiones getRegiones() {
+        return regiones;
+    }
+
+    public void setRegiones(Regiones regiones) {
+        this.regiones = regiones;
+    }
+
+    public List<DetallePedido> getDetallePedidos() {
+        return detallePedidos;
+    }
+
+    public void setDetallePedidos(List<DetallePedido> detallePedidos) {
+        this.detallePedidos = detallePedidos;
     }
 
     //ToString

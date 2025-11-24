@@ -30,8 +30,6 @@ public class CategoriasController {
     @PostMapping("/nueva-categoria")
     public ResponseEntity<Categorias> crearCategoria(@RequestBody Categorias categoria){
         Categorias findCategoria = categoriasService.findByNombreCategoria(categoria.getNombreCategoria());
-        System.out.println(categoria.getNombreCategoria());
-        System.out.println(findCategoria);
         if (findCategoria != null){
             //409 conflict
             return new ResponseEntity<>(HttpStatus.CONFLICT);
