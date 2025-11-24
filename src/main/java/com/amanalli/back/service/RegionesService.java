@@ -1,11 +1,8 @@
 package com.amanalli.back.service;
 
-import com.amanalli.back.exceptions.CategoriaNotFoundException;
 import com.amanalli.back.exceptions.RegionNotFoundException;
-import com.amanalli.back.model.Categorias;
 import com.amanalli.back.model.Regiones;
 import com.amanalli.back.repository.RegionesRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class RegionesService {
+    // === Inyección del Repository ===
     private final RegionesRepository regionesRepository;
 
     @Autowired
@@ -21,40 +19,48 @@ public class RegionesService {
         this.regionesRepository = regionesRepository;
     }
 
-    // Obtener la información de todos los usuarios (GET)
+    // === Obtener la información de todas las regiones (GET) ===
     public List<Regiones> getCategorias() {
         return regionesRepository.findRegionesActivas();
+    }
+
+    // === Crear nueva region (POST) ===
+    public Regiones createRegion(Regiones regiones) {
+        return regionesRepository.save(regiones);
     }
 
     public Regiones findByNombreRegion(String nombreRegion) {
         return regionesRepository.findByNombreRegion(nombreRegion);
     }
 
-    // Nueva Region
-    public Regiones createRegion(Regiones regiones) {
-        return regionesRepository.save(regiones);
-    }
-
-    // Obtener los datos de una region (GET)
+    // === Obtener los datos de una región por ID (GET) ===
     public Regiones getRegionesById(Long id) {
-        Optional<Regiones> regioness = regionesRepository.findByIdAndActivo(id);
-        return regioness.orElseThrow(() -> new RegionNotFoundException(id));
+        Optional<Regiones> regiones = regionesRepository.findByIdAndActivo(id);
+        return regiones.orElseThrow(() -> new RegionNotFoundException(id));
     }
 
-    // Actualizar una region (PUT)
+    // === Actualizar una region activa (PUT) ===
     public Regiones updateRegiones(Regiones region, Long id) {
         return regionesRepository.findByIdAndActivo(id)
                 .map(regiones -> {
                     regiones.setNombreRegion(region.getNombreRegion());
-                    regiones.setEstatusRegion(region.getEstatusRegion());
                     return regionesRepository.save(regiones);
                 })
                 .orElseThrow(() -> new RegionNotFoundException(id));
     }
 
-    // Eliminar una region (DELETE)
+    // === Activar una region Estatus = True (PUT) ===
+    public Regiones updateRegionesInactivas (Long id) {
+        Regiones region = regionesRepository.findById(id)
+                .orElseThrow(() -> new RegionNotFoundException(id));
+
+        region.activar();
+        return regionesRepository.save(region);
+    }
+
+    // === Eliminar/desactivar una region Estatus = False (DELETE) ===
     public void deleteRegionesById(Long id) {
-        if (!regionesRepository.existsById(id) || regionesRepository.existsByIdAndActivoFalse(id)){
+        if (!regionesRepository.existsById(id)){
             throw new RegionNotFoundException(id);
         }
         Regiones regiones = regionesRepository.getReferenceById(id);

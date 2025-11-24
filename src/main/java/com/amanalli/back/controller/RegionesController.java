@@ -1,7 +1,6 @@
 package com.amanalli.back.controller;
 
 import com.amanalli.back.exceptions.RegionNotFoundException;
-import com.amanalli.back.model.Categorias;
 import com.amanalli.back.model.Regiones;
 import com.amanalli.back.service.RegionesService;
 import jakarta.transaction.Transactional;
@@ -15,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/regiones")
 public class RegionesController {
+    // === Inyección del service ===
     private final RegionesService regionesService;
 
     @Autowired
@@ -22,13 +22,13 @@ public class RegionesController {
         this.regionesService = regionesService;
     }
 
-    // Obtener la información de todos los usuarios (GET)
+    // === Obtener la información de todas las regiones (GET) ===
     @GetMapping
     public List<Regiones> getCategorias(){
         return regionesService.getCategorias();
     }
 
-    // Crear nueva region
+    // === Crear nueva region (POST) ===
     @PostMapping("/nueva-region")
     public ResponseEntity<Regiones> crearRegion (@RequestBody Regiones regiones){
         Regiones findRegion = regionesService.findByNombreRegion(regiones.getNombreRegion());
@@ -41,7 +41,7 @@ public class RegionesController {
         }
     }
 
-    // Obtener los datos de una region por id (GET)
+    // === Obtener los datos de una región por ID (GET) ===
     @GetMapping("/{id}")
     public ResponseEntity<Regiones> getRegionById (@PathVariable Long id){
         try {
@@ -52,7 +52,7 @@ public class RegionesController {
         }
     }
 
-    // Actualizar una region (PUT)
+    // === Actualizar una region activa (PUT) ===
     @PutMapping("/{id}")
     public ResponseEntity<Regiones> updateRegion (@RequestBody Regiones region, @PathVariable Long id){
         try {
@@ -63,10 +63,22 @@ public class RegionesController {
         }
     }
 
-    // Eliminar una region (DELETE)
-    @DeleteMapping("/{id}")
+    // === Activar una region Estatus = True (PUT) ===
     @Transactional
-    public ResponseEntity<Regiones> deleteRegionesById (@PathVariable Long id){
+    @PutMapping("/activar/{id}")
+    public ResponseEntity<Regiones> updateRegionesInactivas (@PathVariable Long id) {
+        try {
+            Regiones regiones = regionesService.updateRegionesInactivas(id);
+            return ResponseEntity.status(HttpStatus.CREATED).body(regiones);
+        } catch (RegionNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // === Eliminar/desactivar una region Estatus = False (DELETE) ===
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRegionesById (@PathVariable Long id){
         try {
             regionesService.deleteRegionesById(id);
             return ResponseEntity.noContent().build();
