@@ -62,6 +62,14 @@ public class DetallePedido {
         this.importe = importe;
     }
 
+    public Productos getProductos() { return productos; }
+
+    public void setProductos(Productos productos) { this.productos = productos; }
+
+    public VentaPedidos getVentaPedidos() { return venta_pedidos; }
+
+    public void setVentaPedidos(VentaPedidos ventaPedidos) { this.venta_pedidos = ventaPedidos; }
+
     //ToString
     @Override
     public String toString() {

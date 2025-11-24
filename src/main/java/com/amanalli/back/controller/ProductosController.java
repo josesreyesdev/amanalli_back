@@ -1,4 +1,100 @@
 package com.amanalli.back.controller;
 
+import com.amanalli.back.exceptions.CategoriaNotFoundException;
+import com.amanalli.back.exceptions.ProductoNotFoundException;
+import com.amanalli.back.exceptions.RegionNotFoundException;
+import com.amanalli.back.model.Productos;
+import com.amanalli.back.service.ProductosService;
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/productos")
 public class ProductosController {
+    // === Inyección del Service ===
+    private final ProductosService productosService;
+
+    public ProductosController(ProductosService productosService) {
+        this.productosService = productosService;
+    }
+
+    // === Obtener la información de todos los productos activos (GET) ===
+    @GetMapping
+    public List<Productos> getProductos() {
+        return productosService.getProductos();
+    }
+
+    // === Crear nuevo producto (POST) ===
+    @PostMapping("/nuevo-producto")
+    public ResponseEntity<Productos> crearProducto(@RequestBody Productos producto){
+        try {
+            // Validar si ya existe el producto por nombre
+            Productos findProducto = productosService.findByNombreProducto(producto.getNombreProducto());
+            if (findProducto != null){
+                // 409 Conflict
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+            // Válida categoría y región y crea producto
+            Productos creado = productosService.crearProducto(producto);
+            // 201 Created
+            return ResponseEntity.status(HttpStatus.CREATED).body(creado);
+        } catch (CategoriaNotFoundException | RegionNotFoundException e) {
+            // 404 Not Found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    // === Obtener los datos de un producto por ID (GET) ===
+    @GetMapping("/{id}")
+    public ResponseEntity<Productos> getProductoById(@PathVariable Long id) {
+        try {
+            Productos producto = productosService.getProductosById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(producto);
+        } catch (ProductoNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // === Actualizar un producto activo (PUT) ===
+    @PutMapping("/{id}")
+    public ResponseEntity<Productos> updateProducto(@RequestBody Productos producto, @PathVariable Long id) {
+        try {
+            Productos productos = productosService.updateProductos(producto, id);
+            return ResponseEntity.status(HttpStatus.CREATED).body(productos);
+        } catch (ProductoNotFoundException e) {
+            // 404 Not Found
+            return ResponseEntity.notFound().build();
+        } catch (CategoriaNotFoundException | RegionNotFoundException e) {
+            // 404 Not Found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    // === Activar un producto Estatus = True (PUT) ===
+    @Transactional
+    @PutMapping("/activar/{id}")
+    public ResponseEntity<Productos> activarProducto(@PathVariable Long id) {
+        try {
+            Productos producto = productosService.updateProductosInactivas(id);
+            return ResponseEntity.status(HttpStatus.CREATED).body(producto);
+        } catch (ProductoNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // === Eliminar/desactivar un producto Estatus = False (DELETE) ===
+    @Transactional
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProductoById(@PathVariable Long id) {
+        try {
+            productosService.deleteCategoriasById(id);
+            return ResponseEntity.noContent().build();
+        } catch (ProductoNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
