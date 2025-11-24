@@ -93,6 +93,13 @@ public class Categorias {
         return Objects.hash(idCategoria, nombreCategoria, descripcionCategoria, estatusCategoria);
     }
 
+    // === Activar una categoria Estatus = True (PUT) ===
+    public Categorias activar() {
+        this.estatusCategoria = true;
+        return this;
+    }
+
+    // Eliminar/desactivar una categoria Estatus = False (DELETE)
     public void desactivarById() {
         this.estatusCategoria = false;
     }

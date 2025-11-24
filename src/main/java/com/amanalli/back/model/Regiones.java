@@ -82,6 +82,13 @@ public class Regiones {
         return Objects.hash(idRegion, nombreRegion, estatusRegion);
     }
 
+    // === Activar una region Estatus = True (PUT) ===
+    public Regiones activar() {
+        this.estatusRegion = true;
+        return this;
+    }
+
+    // Eliminar/desactivar una region Estatus = False (DELETE)
     public void desactivarById() {
         this.estatusRegion = false;
     }

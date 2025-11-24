@@ -25,7 +25,7 @@ public class Productos {
     @Column(name = "stock", nullable = false, columnDefinition = "INT")
     private Long stock;
     @Column (name = "estatus_producto", nullable = false, columnDefinition = "TINYINT(1)")
-    private Boolean estatusProducto;
+    private Boolean estatusProducto = true;
 
 
     // Cardinalidad de Productos -> Categorias N:1
@@ -138,5 +138,16 @@ public class Productos {
     @Override
     public int hashCode() {
         return Objects.hash(idProducto, nombreProducto, descripcionProducto, precio, imagen, stock, estatusProducto);
+    }
+
+    // === Activar un producto Estatus = True (PUT) ===
+    public Productos activar() {
+        this.estatusProducto = true;
+        return this;
+    }
+
+    // Eliminar/desactivar un producto Estatus = False (DELETE)
+    public void desactivarById() {
+        this.estatusProducto = false;
     }
 }
