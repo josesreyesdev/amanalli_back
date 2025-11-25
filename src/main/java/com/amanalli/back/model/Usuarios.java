@@ -18,24 +18,23 @@ public class Usuarios {
     private String nombreCompleto;
     @Column(name = "email", nullable = false, unique = true, length = 100, columnDefinition = "VARCHAR(100)")
     private String email;
-    @Column(name = "password", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
+    @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(255)")
     private String password;
     @Column(name = "telefono", nullable = false, unique = true,length = 20, columnDefinition = "VARCHAR(20)")
     private String telefono;
     @Column (name = "activo", nullable = false, columnDefinition = "TINYINT(1)")
-    private Boolean activo;
+    private Boolean activo = true;
 
     // Cardinalidad Usuarios -> VentaPedido 1:N
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarios")
     private List<VentaPedidos> ventaPedidos = new ArrayList<>();
 
     //Constructores
-    public Usuarios(Long idUsuario, String nombreCompleto, String email, String password, Boolean activo) {
+    public Usuarios(Long idUsuario, String nombreCompleto, String email, String password) {
         this.idUsuario = idUsuario;
         this.nombreCompleto = nombreCompleto;
         this.email = email;
         this.password = password;
-        this.activo = activo;
     }
     public Usuarios(){
 
@@ -82,6 +81,14 @@ public class Usuarios {
         this.activo = activo;
     }
 
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
     //ToString
     @Override
     public String toString() {
@@ -103,5 +110,13 @@ public class Usuarios {
     @Override
     public int hashCode() {
         return Objects.hash(idUsuario, nombreCompleto, email, activo);
+    }
+
+    public void activar() {
+        this.activo = true;
+    }
+
+    public void desactivar() {
+        this.activo = false;
     }
 }
