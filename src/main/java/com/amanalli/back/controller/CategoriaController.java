@@ -1,8 +1,8 @@
 package com.amanalli.back.controller;
 
 import com.amanalli.back.exceptions.CategoriaNotFoundException;
-import com.amanalli.back.model.Categorias;
-import com.amanalli.back.service.CategoriasService;
+import com.amanalli.back.model.Categoria;
+import com.amanalli.back.service.CategoriaService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,41 +12,39 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/categorias")
-public class CategoriasController {
+public class CategoriaController {
     // === Inyección del Service ===
-    private final CategoriasService categoriasService;
+    private final CategoriaService categoriaService;
 
-    public CategoriasController(CategoriasService categoriasService) {
-        this.categoriasService = categoriasService;
+    public CategoriaController(CategoriaService categoriaService) {
+        this.categoriaService = categoriaService;
     }
 
     // === Obtener la información de todas las categorias (GET) ===
     @GetMapping
-    public List<Categorias> getCategorias(){
-        return categoriasService.getCategorias();
+    public List<Categoria> getCategorias(){
+        return categoriaService.getCategorias();
     }
 
     // === Crear nueva categoria (POST) ===
     @PostMapping("/nueva-categoria")
-    public ResponseEntity<Categorias> crearCategoria(@RequestBody Categorias categoria){
-        Categorias findCategoria = categoriasService.findByNombreCategoria(categoria.getNombreCategoria());
-        //System.out.println(categoria.getNombreCategoria());
-        //System.out.println(findCategoria);
+    public ResponseEntity<Categoria> crearCategoria(@RequestBody Categoria categoria){
+        Categoria findCategoria = categoriaService.findByNombreCategoria(categoria.getNombreCategoria());
         if (findCategoria != null){
             //409 conflict
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }else {
             //201 created, hay que pasarle un body
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoriasService.createCategoria(categoria));
+            return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.createCategoria(categoria));
         }
     }
 
     // === Obtener los datos de una categoria por ID (GET) ===
     @GetMapping("/{id}")
-    public ResponseEntity<Categorias> getCategoriaById (@PathVariable Long id){
+    public ResponseEntity<Categoria> getCategoriaById (@PathVariable Long id){
         try {
-            Categorias categorias = categoriasService.getCategoriasById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(categorias);
+            Categoria categoria = categoriaService.getCategoriasById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(categoria);
         }catch (CategoriaNotFoundException e){
             return ResponseEntity.notFound().build();
         }
@@ -54,9 +52,9 @@ public class CategoriasController {
 
     // === Actualizar una categoria activa (PUT) ===
     @PutMapping("/{id}")
-    public ResponseEntity<Categorias> updateCategoria (@RequestBody Categorias categoria, @PathVariable Long id){
+    public ResponseEntity<Categoria> updateCategoria (@RequestBody Categoria categoria, @PathVariable Long id){
         try {
-            Categorias categorias = categoriasService.updateCategorias(categoria, id);
+            Categoria categorias = categoriaService.updateCategorias(categoria, id);
             return ResponseEntity.status(HttpStatus.CREATED).body(categorias);
         } catch (CategoriaNotFoundException e){
             return  ResponseEntity.notFound().build();
@@ -66,10 +64,10 @@ public class CategoriasController {
     // === Activar una categoria Estatus = True (PUT) ===
     @Transactional
     @PutMapping("/activar/{id}")
-    public ResponseEntity<Categorias> updateCategoriasInactivas (@PathVariable Long id) {
+    public ResponseEntity<Categoria> updateCategoriasInactivas (@PathVariable Long id) {
         try {
-            Categorias categorias = categoriasService.updateCategoriasInactivas(id);
-            return ResponseEntity.status(HttpStatus.CREATED).body(categorias);
+            Categoria categoria = categoriaService.updateCategoriasInactivas(id);
+            return ResponseEntity.status(HttpStatus.CREATED).body(categoria);
         } catch (CategoriaNotFoundException e){
             return ResponseEntity.notFound().build();
         }
@@ -80,7 +78,7 @@ public class CategoriasController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategoriasById (@PathVariable Long id){
         try {
-            categoriasService.deleteCategoriasById(id);
+            categoriaService.deleteCategoriasById(id);
             return ResponseEntity.noContent().build();
         } catch (CategoriaNotFoundException e){
             return ResponseEntity.notFound().build();

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "productos")
-public class Productos {
+public class Producto {
     //Variables de instancia
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,19 +31,19 @@ public class Productos {
     // Cardinalidad de Productos -> Categorias N:1
     @ManyToOne
     @JoinColumn(name = "id_categoria")//Especifica una columna para hacer JOIN de SQL
-    private Categorias categorias;
+    private Categoria categorias;
 
     // Cardinalidad de Productos -> Regiones N:1
     @ManyToOne
     @JoinColumn(name = "id_region")//Especifica una columna para hacer JOIN de SQL
-    private Regiones regiones;
+    private Region regiones;
 
     // Cardinalidad Productos -> DetallePedido 1:N
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productos")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
     private List<DetallePedido> detallePedidos = new ArrayList<>();
 
     //Contructores
-    public Productos(Long idProducto, String nombreProducto, String descripcionProducto, Double precio, String imagen, Long stock, Boolean estatusProducto, Categorias categorias, Regiones regiones) {
+    public Producto(Long idProducto, String nombreProducto, String descripcionProducto, Double precio, String imagen, Long stock, Boolean estatusProducto, Categoria categoria, Region regiones) {
         this.idProducto = idProducto;
         this.nombreProducto = nombreProducto;
         this.descripcionProducto = descripcionProducto;
@@ -51,11 +51,11 @@ public class Productos {
         this.imagen = imagen;
         this.stock = stock;
         this.estatusProducto = estatusProducto;
-        this.categorias = categorias;
+        this.categorias = categoria;
         this.regiones = regiones;
     }
 
-    public Productos(){
+    public Producto(){
 
     }
 
@@ -116,19 +116,19 @@ public class Productos {
         this.estatusProducto = estatusProducto;
     }
 
-    public Categorias getCategorias() {
+    public Categoria getCategorias() {
         return categorias;
     }
 
-    public void setCategorias(Categorias categorias) {
-        this.categorias = categorias;
+    public void setCategorias(Categoria categoria) {
+        this.categorias = categoria;
     }
 
-    public Regiones getRegiones() {
+    public Region getRegiones() {
         return regiones;
     }
 
-    public void setRegiones(Regiones regiones) {
+    public void setRegiones(Region regiones) {
         this.regiones = regiones;
     }
 
@@ -157,8 +157,8 @@ public class Productos {
     //Equals y Hashcode
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Productos productos)) return false;
-        return Objects.equals(idProducto, productos.idProducto) && Objects.equals(nombreProducto, productos.nombreProducto) && Objects.equals(descripcionProducto, productos.descripcionProducto) && Objects.equals(precio, productos.precio) && Objects.equals(imagen, productos.imagen) && Objects.equals(stock, productos.stock) && Objects.equals(estatusProducto, productos.estatusProducto);
+        if (!(o instanceof Producto producto)) return false;
+        return Objects.equals(idProducto, producto.idProducto) && Objects.equals(nombreProducto, producto.nombreProducto) && Objects.equals(descripcionProducto, producto.descripcionProducto) && Objects.equals(precio, producto.precio) && Objects.equals(imagen, producto.imagen) && Objects.equals(stock, producto.stock) && Objects.equals(estatusProducto, producto.estatusProducto);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class Productos {
     }
 
     // === Activar un producto Estatus = True (PUT) ===
-    public Productos activar() {
+    public Producto activar() {
         this.estatusProducto = true;
         return this;
     }

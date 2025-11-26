@@ -20,12 +20,12 @@ public class DetallePedido {
     // Cardinalidad de DetallePedido -> Productos N:1
     @ManyToOne
     @JoinColumn(name = "id_producto")//Especifica una columna para hacer JOIN de SQL
-    private Productos productos;
+    private Producto producto;
 
     // Cardinalidad de DetallePedido -> VentaPedidos N:1
     @ManyToOne
     @JoinColumn(name = "id_detalle_venta")//Especifica una columna para hacer JOIN de SQL
-    private VentaPedidos venta_pedidos;
+    private VentaPedido ventaPedido;
 
     //Constructores
     public DetallePedido(Long idDetalle, Long cantidad, Double importe) {
@@ -62,13 +62,13 @@ public class DetallePedido {
         this.importe = importe;
     }
 
-    public Productos getProductos() { return productos; }
+    public Producto getProductos() { return producto; }
 
-    public void setProductos(Productos productos) { this.productos = productos; }
+    public void setProductos(Producto producto) { this.producto = producto; }
 
-    public VentaPedidos getVentaPedidos() { return venta_pedidos; }
+    public VentaPedido getVentaPedidos() { return ventaPedido; }
 
-    public void setVentaPedidos(VentaPedidos ventaPedidos) { this.venta_pedidos = ventaPedidos; }
+    public void setVentaPedidos(VentaPedido ventaPedido) { this.ventaPedido = ventaPedido; }
 
     //ToString
     @Override

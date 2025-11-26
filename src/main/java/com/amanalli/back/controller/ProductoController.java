@@ -3,8 +3,9 @@ package com.amanalli.back.controller;
 import com.amanalli.back.exceptions.CategoriaNotFoundException;
 import com.amanalli.back.exceptions.ProductoNotFoundException;
 import com.amanalli.back.exceptions.RegionNotFoundException;
-import com.amanalli.back.model.Productos;
+import com.amanalli.back.model.Producto;
 import com.amanalli.back.service.ProductosService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,32 +15,33 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/productos")
-public class ProductosController {
+public class ProductoController {
     // === Inyección del Service ===
     private final ProductosService productosService;
 
-    public ProductosController(ProductosService productosService) {
+    public ProductoController(ProductosService productosService) {
         this.productosService = productosService;
     }
 
     // === Obtener la información de todos los productos activos (GET) ===
     @GetMapping
-    public List<Productos> getProductos() {
+    public List<Producto> getProductos() {
         return productosService.getProductos();
     }
 
+    @SecurityRequirement(name = "bearer-key")
     // === Crear nuevo producto (POST) ===
     @PostMapping("/nuevo-producto")
-    public ResponseEntity<Productos> crearProducto(@RequestBody Productos producto){
+    public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto){
         try {
             // Validar si ya existe el producto por nombre
-            Productos findProducto = productosService.findByNombreProducto(producto.getNombreProducto());
+            Producto findProducto = productosService.findByNombreProducto(producto.getNombreProducto());
             if (findProducto != null){
                 // 409 Conflict
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
             // Válida categoría y región y crea producto
-            Productos creado = productosService.crearProducto(producto);
+            Producto creado = productosService.crearProducto(producto);
             // 201 Created
             return ResponseEntity.status(HttpStatus.CREATED).body(creado);
         } catch (CategoriaNotFoundException | RegionNotFoundException e) {
@@ -48,22 +50,24 @@ public class ProductosController {
         }
     }
 
+    @SecurityRequirement(name = "bearer-key")
     // === Obtener los datos de un producto por ID (GET) ===
     @GetMapping("/{id}")
-    public ResponseEntity<Productos> getProductoById(@PathVariable Long id) {
+    public ResponseEntity<Producto> getProductoById(@PathVariable Long id) {
         try {
-            Productos producto = productosService.getProductosById(id);
+            Producto producto = productosService.getProductosById(id);
             return ResponseEntity.status(HttpStatus.OK).body(producto);
         } catch (ProductoNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
+    @SecurityRequirement(name = "bearer-key")
     // === Actualizar un producto activo (PUT) ===
     @PutMapping("/{id}")
-    public ResponseEntity<Productos> updateProducto(@RequestBody Productos producto, @PathVariable Long id) {
+    public ResponseEntity<Producto> updateProducto(@RequestBody Producto producto, @PathVariable Long id) {
         try {
-            Productos productos = productosService.updateProductos(producto, id);
+            Producto productos = productosService.updateProductos(producto, id);
             return ResponseEntity.status(HttpStatus.CREATED).body(productos);
         } catch (ProductoNotFoundException e) {
             // 404 Not Found
@@ -77,9 +81,9 @@ public class ProductosController {
     // === Activar un producto Estatus = True (PUT) ===
     @Transactional
     @PutMapping("/activar/{id}")
-    public ResponseEntity<Productos> activarProducto(@PathVariable Long id) {
+    public ResponseEntity<Producto> activarProducto(@PathVariable Long id) {
         try {
-            Productos producto = productosService.updateProductosInactivas(id);
+            Producto producto = productosService.updateProductosInactivas(id);
             return ResponseEntity.status(HttpStatus.CREATED).body(producto);
         } catch (ProductoNotFoundException e) {
             return ResponseEntity.notFound().build();

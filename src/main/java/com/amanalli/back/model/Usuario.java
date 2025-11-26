@@ -1,20 +1,24 @@
 package com.amanalli.back.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuarios {
+public class Usuario implements UserDetails {
     //Variables de instancia
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     private Long idUsuario;
-    @Column(name = "nombre_completo", nullable = false, unique = true, length = 100, columnDefinition = "VARCHAR(100)")
+    @Column(name = "nombre_completo", nullable = false, length = 100, columnDefinition = "VARCHAR(100)")
     private String nombreCompleto;
     @Column(name = "email", nullable = false, unique = true, length = 100, columnDefinition = "VARCHAR(100)")
     private String email;
@@ -25,19 +29,35 @@ public class Usuarios {
     @Column (name = "activo", nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean activo = true;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuarios_roles",
+            joinColumns = @JoinColumn(name = "id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_rol")
+    )
+    private List<Rol> roles = new ArrayList<>();
+
     // Cardinalidad Usuarios -> VentaPedido 1:N
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarios")
-    private List<VentaPedidos> ventaPedidos = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private List<VentaPedido> ventaPedidos = new ArrayList<>();
 
     //Constructores
-    public Usuarios(Long idUsuario, String nombreCompleto, String email, String password) {
+    public Usuario(Long idUsuario, String nombreCompleto, String email, String password, String telefono, List<Rol> roles) {
         this.idUsuario = idUsuario;
         this.nombreCompleto = nombreCompleto;
         this.email = email;
         this.password = password;
+        this.telefono = telefono;
+        this.roles = roles;
     }
-    public Usuarios(){
+    public Usuario(){}
 
+    public List<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
     }
 
     //Getters y Setters
@@ -65,8 +85,40 @@ public class Usuarios {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(rol -> new SimpleGrantedAuthority("ROL_" + rol.getNombre()))
+                .toList();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
@@ -103,8 +155,8 @@ public class Usuarios {
     //Equals y Hashcode
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Usuarios usuarios)) return false;
-        return Objects.equals(idUsuario, usuarios.idUsuario) && Objects.equals(nombreCompleto, usuarios.nombreCompleto) && Objects.equals(email, usuarios.email) && Objects.equals(activo, usuarios.activo);
+        if (!(o instanceof Usuario usuario)) return false;
+        return Objects.equals(idUsuario, usuario.idUsuario) && Objects.equals(nombreCompleto, usuario.nombreCompleto) && Objects.equals(email, usuario.email) && Objects.equals(activo, usuario.activo);
     }
 
     @Override

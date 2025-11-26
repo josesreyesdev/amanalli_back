@@ -1,7 +1,6 @@
 package com.amanalli.back.repository;
 
-import com.amanalli.back.model.Categorias;
-import com.amanalli.back.model.VentaPedidos;
+import com.amanalli.back.model.VentaPedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VentaPedidoRepository extends JpaRepository<VentaPedidos, Long> {
+public interface VentaPedidoRepository extends JpaRepository<VentaPedido, Long> {
 
-    @Query("SELECT vp FROM venta_pedidos vp WHERE vp.estatus_pedido = true")
-    List<VentaPedidos> findVentaPedidosActivas();
+    @Query("SELECT vp FROM VentaPedido vp WHERE vp.estatusPedido = true")
+    List<VentaPedido> findVentaPedidosActivas();
 
-    @Query("SELECT vp FROM venta-pedidos vp WHERE vp.id_venta = :id_venta AND vp.estatus_pedido = true")
-    Optional<VentaPedidos> findByIdAndActivo(Long id);
+    @Query("SELECT vp FROM VentaPedido vp WHERE vp.idVenta = :id AND vp.estatusPedido = true")
+    Optional<VentaPedido> findByIdAndActivo(Long id);
 }
