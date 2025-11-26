@@ -3,12 +3,12 @@ package com.amanalli.back.service;
 import com.amanalli.back.exceptions.CategoriaNotFoundException;
 import com.amanalli.back.exceptions.ProductoNotFoundException;
 import com.amanalli.back.exceptions.RegionNotFoundException;
-import com.amanalli.back.model.Categorias;
-import com.amanalli.back.model.Productos;
-import com.amanalli.back.model.Regiones;
-import com.amanalli.back.repository.CategoriasRepository;
-import com.amanalli.back.repository.ProductosRepository;
-import com.amanalli.back.repository.RegionesRepository;
+import com.amanalli.back.model.Categoria;
+import com.amanalli.back.model.Producto;
+import com.amanalli.back.model.Region;
+import com.amanalli.back.repository.CategoriaRepository;
+import com.amanalli.back.repository.ProductoRepository;
+import com.amanalli.back.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,59 +18,59 @@ import java.util.Optional;
 @Service
 public class ProductosService {
     // === Inyección del Repository ===
-    private final ProductosRepository productosRepository;
-    private final CategoriasRepository categoriasRepository;
-    private final RegionesRepository regionesRepository;
+    private final ProductoRepository productoRepository;
+    private final CategoriaRepository categoriaRepository;
+    private final RegionRepository regionRepository;
 
     @Autowired
-    public ProductosService(ProductosRepository productosRepository,
-                            CategoriasRepository categoriasRepository,
-                            RegionesRepository regionesRepository) {
-        this.productosRepository = productosRepository;
-        this.categoriasRepository = categoriasRepository;
-        this.regionesRepository = regionesRepository;
+    public ProductosService(ProductoRepository productoRepository,
+                            CategoriaRepository categoriaRepository,
+                            RegionRepository regionRepository) {
+        this.productoRepository = productoRepository;
+        this.categoriaRepository = categoriaRepository;
+        this.regionRepository = regionRepository;
     }
 
     // === Obtener la información de todos los productos activos (GET) ===
-    public List<Productos> getProductos() {
-        return productosRepository.findProductosActivos();
+    public List<Producto> getProductos() {
+        return productoRepository.findProductosActivos();
     }
 
     // === Crear nuevo producto (POST) ===
-    public Productos crearProducto(Productos producto) {
+    public Producto crearProducto(Producto producto) {
         // Validar que la categoria y region existan y estén activas
-        Categorias categoriaValida = validarCategoriaActiva(
+        Categoria categoriaValida = validarCategoriaActiva(
                 producto.getCategorias().getIdCategoria()
         );
-        Regiones regionValida = validarRegionActiva(
+        Region regionValida = validarRegionActiva(
                 producto.getRegiones().getIdRegion()
         );
 
         // Asignar las entidades validadas al producto
         producto.setCategorias(categoriaValida);
         producto.setRegiones(regionValida);
-        return productosRepository.save(producto);
+        return productoRepository.save(producto);
     }
 
-    public Productos findByNombreProducto(String nombreProducto) {
-        return productosRepository.findByNombreProducto(nombreProducto);
+    public Producto findByNombreProducto(String nombreProducto) {
+        return productoRepository.findByNombreProducto(nombreProducto);
     }
 
     // === Obtener los datos de un producto por ID (GET) ===
-    public Productos getProductosById(Long id) {
-        Optional<Productos> productos = productosRepository.findByIdAndActivo(id);
+    public Producto getProductosById(Long id) {
+        Optional<Producto> productos = productoRepository.findByIdAndActivo(id);
         return productos.orElseThrow(() -> new ProductoNotFoundException(id));
     }
 
     // === Actualizar un producto activo (PUT) ===
-    public Productos updateProductos(Productos producto, Long id) {
-        return productosRepository.findByIdAndActivo(id)
+    public Producto updateProductos(Producto producto, Long id) {
+        return productoRepository.findByIdAndActivo(id)
                 .map(productos -> {
                     // Validar que la categoria y region existan
-                    Categorias categoriaValida = validarCategoriaActiva(
+                    Categoria categoriaValida = validarCategoriaActiva(
                             producto.getCategorias().getIdCategoria()
                     );
-                    Regiones regionValida = validarRegionActiva(
+                    Region regionValida = validarRegionActiva(
                             producto.getRegiones().getIdRegion()
                     );
 
@@ -82,37 +82,37 @@ public class ProductosService {
                     productos.setStock(producto.getStock());
                     productos.setCategorias(categoriaValida);
                     productos.setRegiones(regionValida);
-                    return productosRepository.save(productos);
+                    return productoRepository.save(productos);
                 })
                 .orElseThrow(() -> new ProductoNotFoundException(id));
     }
 
     // === Activar un producto Estatus = True (PUT) ===
-    public Productos updateProductosInactivas (Long id) {
-        Productos producto = productosRepository.findById(id)
+    public Producto updateProductosInactivas (Long id) {
+        Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new ProductoNotFoundException(id));
 
         producto.activar();
-        return productosRepository.save(producto);
+        return productoRepository.save(producto);
     }
 
     // === Eliminar/desactivar un producto Estatus = False (DELETE) ===
     public void deleteCategoriasById(Long id) {
-        if (!productosRepository.existsById(id)){
+        if (!productoRepository.existsById(id)){
             throw new ProductoNotFoundException(id);
         }
-        Productos productos = productosRepository.getReferenceById(id);
-        productos.desactivarById();
+        Producto producto = productoRepository.getReferenceById(id);
+        producto.desactivarById();
     }
 
     // === Validar si la categoria y region ingresadas existen y tienen Estatus = True ===
-    private Categorias validarCategoriaActiva(Long idCategoria) {
-        return categoriasRepository.findByIdAndActivo(idCategoria)
+    private Categoria validarCategoriaActiva(Long idCategoria) {
+        return categoriaRepository.findByIdAndActivo(idCategoria)
                 .orElseThrow(() -> new CategoriaNotFoundException(idCategoria));
     }
 
-    private Regiones validarRegionActiva(Long idRegion) {
-        return regionesRepository.findByIdAndActivo(idRegion)
+    private Region validarRegionActiva(Long idRegion) {
+        return regionRepository.findByIdAndActivo(idRegion)
                 .orElseThrow(() -> new RegionNotFoundException(idRegion));
     }
 }

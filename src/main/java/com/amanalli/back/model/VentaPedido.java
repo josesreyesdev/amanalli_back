@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "venta_pedidos")
-public class VentaPedidos {
+public class VentaPedido {
     //Variables de instancia
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,22 +23,22 @@ public class VentaPedidos {
     private Boolean estatusPedido;
 
     // Cardinalidad Productos -> DetallePedido 1:N
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "venta_pedidos")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ventaPedido")
     private List<DetallePedido> detallePedidos = new ArrayList<>();
 
     // Cardinalidad de VentaPedidos -> Usuarios N:1
     @ManyToOne
     @JoinColumn(name = "id_usuario")//Especifica una columna para hacer JOIN de SQL
-    private Usuarios usuarios;
+    private Usuario usuario;
 
     //Constructores
-    public VentaPedidos(Long idVenta, LocalDateTime fechaPedido, Double totalVenta, Boolean estatusPedido) {
+    public VentaPedido(Long idVenta, LocalDateTime fechaPedido, Double totalVenta, Boolean estatusPedido) {
         this.idVenta = idVenta;
         this.fechaPedido = fechaPedido;
         this.totalVenta = totalVenta;
         this.estatusPedido = estatusPedido;
     }
-    public VentaPedidos(){
+    public VentaPedido(){
 
     }
 
@@ -89,7 +89,7 @@ public class VentaPedidos {
     //Equals y Hashcode
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof VentaPedidos that)) return false;
+        if (!(o instanceof VentaPedido that)) return false;
         return Objects.equals(idVenta, that.idVenta) && Objects.equals(fechaPedido, that.fechaPedido) && Objects.equals(totalVenta, that.totalVenta) && Objects.equals(estatusPedido, that.estatusPedido);
     }
 

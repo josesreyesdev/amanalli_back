@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "regiones")
-public class Regiones {
+public class Region {
     // Variables de instancia
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,16 +22,16 @@ public class Regiones {
 
     // Cardinalidad Regiones -> Productos 1:N
     @OneToMany(mappedBy = "regiones", cascade = CascadeType.ALL)
-    private List<Productos> productos = new ArrayList<>();
+    private List<Producto> productos = new ArrayList<>();
 
     //Constructores
-    public Regiones(Long idRegion, String nombreRegion, Boolean estatusRegion) {
+    public Region(Long idRegion, String nombreRegion, Boolean estatusRegion) {
         this.idRegion = idRegion;
         this.nombreRegion = nombreRegion;
         this.estatusRegion = estatusRegion;
     }
 
-    public Regiones(){
+    public Region(){
 
     }
 
@@ -73,7 +73,7 @@ public class Regiones {
     // Equals y Hashcode
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Regiones regiones)) return false;
+        if (!(o instanceof Region regiones)) return false;
         return Objects.equals(idRegion, regiones.idRegion) && Objects.equals(nombreRegion, regiones.nombreRegion) && Objects.equals(estatusRegion, regiones.estatusRegion);
     }
 
@@ -83,7 +83,7 @@ public class Regiones {
     }
 
     // === Activar una region Estatus = True (PUT) ===
-    public Regiones activar() {
+    public Region activar() {
         this.estatusRegion = true;
         return this;
     }

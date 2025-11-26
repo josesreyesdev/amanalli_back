@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "categorias")
-public class Categorias {
+public class Categoria {
     // Variables de instancia
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,17 +23,17 @@ public class Categorias {
 
     // Cardinalidad Categorias -> Productos 1:N
     @OneToMany(mappedBy = "categorias", cascade = CascadeType.ALL)
-    private List<Productos> productos = new ArrayList<>();
+    private List<Producto> productos = new ArrayList<>();
 
     //Constructores
-    public Categorias(Long idCategoria, String nombreCategoria, String descripcionCategoria) {
+    public Categoria(Long idCategoria, String nombreCategoria, String descripcionCategoria) {
         this.idCategoria = idCategoria;
         this.nombreCategoria = nombreCategoria;
         this.descripcionCategoria = descripcionCategoria;
         this.estatusCategoria = true;
     }
 
-    public Categorias(){
+    public Categoria(){
 
     }
 
@@ -84,7 +84,7 @@ public class Categorias {
     // Equals y Hashcode
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Categorias that)) return false;
+        if (!(o instanceof Categoria that)) return false;
         return Objects.equals(idCategoria, that.idCategoria) && Objects.equals(nombreCategoria, that.nombreCategoria) && Objects.equals(descripcionCategoria, that.descripcionCategoria) && Objects.equals(estatusCategoria, that.estatusCategoria);
     }
 
@@ -94,7 +94,7 @@ public class Categorias {
     }
 
     // === Activar una categoria Estatus = True (PUT) ===
-    public Categorias activar() {
+    public Categoria activar() {
         this.estatusCategoria = true;
         return this;
     }

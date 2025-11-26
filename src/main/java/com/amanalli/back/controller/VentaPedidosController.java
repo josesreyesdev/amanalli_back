@@ -1,14 +1,9 @@
 package com.amanalli.back.controller;
 
 import com.amanalli.back.exceptions.VentaPedidosNotFoundException;
-import com.amanalli.back.model.VentaPedidos;
+import com.amanalli.back.model.VentaPedido;
 import com.amanalli.back.service.VentaPedidoService;
-import org.apache.catalina.LifecycleState;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,14 +23,14 @@ public class VentaPedidosController {
 
     // === Obtener la informacion de todos los pedidos (GET) ===
     @GetMapping
-    public List<VentaPedidos> getVentaPedidos() {
+    public List<VentaPedido> getVentaPedidos() {
         return ventaPedidoService.getVentaPedidos();
     }
 
     // === Creare nuevo pedido (POST) ===
     @PostMapping("/nuevo-pedido")
-    public ResponseEntity<VentaPedidos> crearVentaPedido(@RequestBody VentaPedidos ventaPedido) {
-        VentaPedidos findVentaPedido = ventaPedidoService.getVentaPedidosById(ventaPedido.getIdVenta());
+    public ResponseEntity<VentaPedido> crearVentaPedido(@RequestBody VentaPedido ventaPedido) {
+        VentaPedido findVentaPedido = ventaPedidoService.getVentaPedidosById(ventaPedido.getIdVenta());
         if (findVentaPedido != null) {
             //409 conflict
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -47,10 +42,10 @@ public class VentaPedidosController {
 
     // === Obtener los datos de un pedido por ID (GET) ===
     @GetMapping("/{id}")
-    public ResponseEntity<VentaPedidos> getVentaPedidosById (@PathVariable Long id) {
+    public ResponseEntity<VentaPedido> getVentaPedidosById (@PathVariable Long id) {
         try {
-            VentaPedidos ventaPedidos = ventaPedidoService.getVentaPedidosById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(ventaPedidos);
+            VentaPedido ventaPedido = ventaPedidoService.getVentaPedidosById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(ventaPedido);
         } catch (VentaPedidosNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
