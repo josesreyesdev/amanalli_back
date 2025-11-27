@@ -55,7 +55,7 @@ public class UsuarioController {
         }
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    //@SecurityRequirement(name = "bearer-key")
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<UsuarioResponse> updateUsuario(@RequestBody UsuarioRequest request, @PathVariable Long id) {
@@ -67,7 +67,7 @@ public class UsuarioController {
         }
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    //@SecurityRequirement(name = "bearer-key")
     // === Activar un usuario Estatus = True (PUT) ===
     @Transactional
     @PutMapping("/activar/{id}")
@@ -80,7 +80,7 @@ public class UsuarioController {
         }
     }
 
-    @SecurityRequirement(name = "bearer-key")
+    //@SecurityRequirement(name = "bearer-key")
     // === Eliminar/desactivar un usuario Estatus = False (DELETE) ===
     @Transactional
     @DeleteMapping("/{id}")
@@ -92,5 +92,16 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/email")
+    public ResponseEntity<Usuario> getByEmail(@RequestParam String email) {
+        Usuario userByEmail = usuarioService.findByEmail(email);
+        if(userByEmail == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userByEmail);
+    }
+
+
 }
 
