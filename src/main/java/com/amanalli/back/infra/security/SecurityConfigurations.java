@@ -31,10 +31,11 @@ public class SecurityConfigurations {
     @Bean // Disponible en mi contexto de spring
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+                .cors(c -> {})
                 //.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // le indicamos a spring el tipo de sesion
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers(HttpMethod.POST, "/auth").permitAll()
-                        //requestMatchers(HttpMethod.POST, "/productos/**").hasRole("ADMIN")
+                                //requestMatchers(HttpMethod.POST, "/productos/**").hasRole("ADMIN")
 
                                 /*.requestMatchers(HttpMethod.PUT, "/productos/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/productos/**").hasRole("ADMIN")
