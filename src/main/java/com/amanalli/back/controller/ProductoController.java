@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/productos")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -30,7 +31,6 @@ public class ProductoController {
         return productosService.getProductos();
     }
 
-    @SecurityRequirement(name = "bearer-key")
     // === Crear nuevo producto (POST) ===
     @PostMapping("/nuevo-producto")
     public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto){
@@ -51,7 +51,6 @@ public class ProductoController {
         }
     }
 
-    @SecurityRequirement(name = "bearer-key")
     // === Obtener los datos de un producto por ID (GET) ===
     @GetMapping("/{id}")
     public ResponseEntity<Producto> getProductoById(@PathVariable Long id) {
@@ -63,7 +62,6 @@ public class ProductoController {
         }
     }
 
-    @SecurityRequirement(name = "bearer-key")
     // === Actualizar un producto activo (PUT) ===
     @PutMapping("/{id}")
     public ResponseEntity<Producto> updateProducto(@RequestBody Producto producto, @PathVariable Long id) {
