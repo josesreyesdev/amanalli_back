@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/productos")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductoController {
     // === Inyección del Service ===
     private final ProductosService productosService;
