@@ -91,5 +91,16 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/email")
+    public ResponseEntity<Usuario> getByEmail(@RequestParam String email) {
+        Usuario userByEmail = usuarioService.findByEmail(email);
+        if(userByEmail == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userByEmail);
+    }
+
+
 }
 

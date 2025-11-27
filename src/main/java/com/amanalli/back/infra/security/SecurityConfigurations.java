@@ -50,6 +50,7 @@ public class SecurityConfigurations {
                                 .requestMatchers("/regiones/**").permitAll()
                                 .requestMatchers("/detalle-pedido/**").permitAll()
                                 .requestMatchers("/venta-pedidos**").permitAll()
+                                .requestMatchers("/roles**").permitAll()
                                 .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
